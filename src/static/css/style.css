@@ -1,0 +1,82 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        linear-gradient(
+          rgba(0, 0, 0, 0.6), 
+          rgba(0, 0, 0, 0.3)
+        ), url('../images/lobby-background.jpg');
+    background-size: cover;
+
+}
+
+.register, .login {
+    font-family:'Courier New', Courier, monospace;
+    display: inherit;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 97vh;
+    row-gap: 10px;
+    color: white;
+}
+
+.form {
+    display: inherit;
+    justify-content: space-evenly;
+    align-items: center;
+    align-content: center;
+    flex-direction: column;
+    row-gap: 20px;
+    min-width: 700px;
+    min-height: 200px;
+}
+
+.password, .name, .password_confirm {
+    display: inherit;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 400px;
+    height: 60px;
+    border-radius: 10px;
+    background-image: linear-gradient(to right,rgba(134,187,240, 0.7),  rgba(134,187,240, 0.5));
+    box-shadow: 0px 0px 30px rgba(170, 210, 250, 0.9);
+}
+
+.user_input {
+    font-family: inherit;
+    width: 350px;
+    
+}
+.button {
+    font-family: inherit;
+    font-size: 20px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    box-shadow: 0px 0px 45px rgba(170, 210, 250, 0.9);
+    background-image: linear-gradient(to right,rgba(134,187,240, 0.7),  rgba(134,187,240, 0.6));
+}
+
+.button:active, .button:hover {
+    background-image: linear-gradient(to right,rgba(151, 203, 255, 0.7),  rgba(151, 203, 255, 0.5));
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.link:visited {
+    color: #ccccff;
+}
+
+.link:active, .link:hover {
+    color:#66a3ff;
+}
+
+

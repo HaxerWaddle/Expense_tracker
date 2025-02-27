@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head %}{% endblock %}
+
+
+{% block body %}
+    <div>
+        <form action="{{ url_for(request.endpoint, id=id, username=username) }}", method="POST">
+            {{ form.csrf_token }}
+            {{ form.name.label }} {{ form.name(size = 20) }}
+            {{ form.description.label }} {{ form.description(size=20) }}
+            {{ form.submit }}
+        </form>
+        {% if msg|length > 0 %}
+            <p>{{ msg }}</p>
+        {% endif %}
+    </div>
+    
+    <button><a href="{{ url_for('dashboard', id=id, username=username) }}">Return to dashboard</a></button>
+{% endblock %}

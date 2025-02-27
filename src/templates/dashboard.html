@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block head %}{% endblock %}
+
+
+{% block body %}
+    <div>
+        <h1>Welcome {{ username }}</h1>
+        <p>Your recent expenses</p>
+        {% if expenses|length == 0 %}
+        <div>
+            <p>Looks like no expenses were made recently..</p>
+        </div>
+        {% endif %}
+        {% for expense in expenses %}
+        <div>
+            <p><span>{{ expense.name }}</span>{{ expense.info }}</p>
+        </div>
+        {% endfor %}
+        <button><a href="{{ url_for('add', id=id, username=username) }}">Add Expense</a></button>
+        <button><a href="{{ url_for('logout') }}">Logout</a></button>
+    </div>
+{% endblock %}
