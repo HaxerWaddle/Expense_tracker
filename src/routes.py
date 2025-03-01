@@ -2,7 +2,7 @@ from flask import redirect, url_for, render_template
 from flask_login import login_required, login_user, logout_user, current_user
 from src import app, db, login_manager
 from src.models import USER, EXPENSE
-from src.forms import Register_Form, Login_Form, Add_expense
+from src.forms import Register_Form, Login_Form, Add_expense, Edit_expense
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -14,12 +14,13 @@ def redirect_from_home():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard',id=current_user.id, username=current_user.username))
+    
     form = Register_Form()
     if form.validate_on_submit():
         username= form.name.data
         password= form.password.data
         if len(username) < 8 or len(password) < 8:
-            return render_template('register.html', form=form, error='Username and password must be 8 or above characters long')
+            return render_template('register.html', form=form, error='Username and password must be 8 or above characters long!')
         
         check_username = db.session.query(USER).filter_by(username=username).first()
         if check_username:
@@ -47,7 +48,7 @@ def login():
             login_user(user, remember=True)  
             return redirect(url_for('dashboard',id=user.id, username=username))
         else:
-            return render_template('login.html', form=form, error='Incorrect password or username')
+            return render_template('login.html', form=form, error='Incorrect password or username!')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
@@ -61,23 +62,49 @@ def load_user(user_id):
     return db.session.get(USER, user_id)
 
 @app.route('/Dashboard/<int:id>/<string:username>', methods=['GET', 'POST'])
-@login_required
 def dashboard(id, username):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     user_expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.user_id == id)).scalars().all()
-    
-    print(user_expenses)
+
     return render_template('dashboard.html', username=username, id=id, expenses=user_expenses)
 
 @app.route('/Dashboard/<int:id>/<string:username>/Add', methods=['GET', 'POST'])
-@login_required
 def add(id, username):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
     form = Add_expense()
     if form.validate_on_submit():
         expense_name = form.name.data
         expense_description = form.description.data
         expense_to_add = EXPENSE(name=expense_name, info=expense_description, user_id=id)
+
         db.session.add(expense_to_add)
         db.session.commit()
         return render_template('add_expense.html', form=form, id=id, username=username, msg='Success')
         
     return render_template('add_expense.html', form=form, id=id, username=username)
+
+@app.route('/Dashboard/<int:id>/<string:username>/Edit/<int:expense_id>', methods=['GET', 'POST'])
+def edit(id, username, expense_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    form = Edit_expense()
+    if form.validate_on_submit():
+        new_name = form.name.data
+        new_description = form.description.data
+        expense= db.session.execute(db.select(EXPENSE).where(EXPENSE.id == expense_id)).scalar_one_or_none()
+
+        if new_name and new_name.strip():
+            expense.name = new_name
+        
+        if new_description and new_description.strip():
+            expense.info = new_description
+        
+        db.session.commit()
+
+        return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id ,msg="Changes saved")
+    return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id)

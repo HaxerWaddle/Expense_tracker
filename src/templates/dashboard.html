@@ -14,9 +14,11 @@
         {% for expense in expenses %}
         <div>
             <p><span>{{ expense.name }}</span>{{ expense.info }}</p>
+            <button><a href="{{ url_for('edit', id= id, username=username, expense_id=expense.id) }}"> Edit this card</a></button>
         </div>
         {% endfor %}
         <button><a href="{{ url_for('add', id=id, username=username) }}">Add Expense</a></button>
+        
         <button><a href="{{ url_for('logout') }}">Logout</a></button>
     </div>
 {% endblock %}

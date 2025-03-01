@@ -13,7 +13,12 @@ class Login_Form(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     login = SubmitField('Login')
 
-class Add_expense(FlaskForm):
+class Add_expense(FlaskForm):  
     name = StringField('ExpenseName', validators=[DataRequired()])
     description = TextAreaField('Description', validators=[DataRequired()], render_kw={"placeholder":"Description here"})
     submit = SubmitField('Add')
+
+class Edit_expense(FlaskForm):  
+    name = StringField('ExpenseName')
+    description = TextAreaField('Description', render_kw={"placeholder":"Description here"})
+    submit = SubmitField('Save')
