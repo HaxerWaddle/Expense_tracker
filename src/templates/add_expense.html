@@ -3,18 +3,26 @@
 
 
 {% block body %}
-    <div>
-        <form action="{{ url_for(request.endpoint, id=id, username=username) }}", method="POST">
+    <style>
+        body {background-image:linear-gradient(rgba(16, 29, 74, 0.5),rgba(13, 36, 62, 0.8)), url("{{ url_for('static', filename='images/add_image.jpg')}}");}   
+    </style>
+    <div class="add hidden">
+        <form class='expense_form' action="{{ url_for(request.endpoint, id=id, username=username) }}", method="POST", autocomplete="off">
             {{ form.csrf_token }}
-            {{ form.name.label }} {{ form.name(size = 20) }}
-            {{ form.description.label }} {{ form.description(size=20) }}
-            {{ form.submit }}
+            <div class="name">
+                <div>Name</div> 
+                <div>{{ form.name(class='user_input') }}</div>
+            </div>
+            <div class="new_desc">
+                <div>Description</div> 
+                <div>{{ form.description(class='user_input', rows='5') }}</div>
+            </div>
+            <div>{{ form.submit(class='button') }}</div>
         </form>
         {% if msg|length > 0 %}
-            <p>{{ msg }}!</p>
+            <p id="msg">{{ msg }}!</p>
         {% endif %}
+        <button class="button" id="return"><a href="{{ url_for('dashboard', id=id, username=username) }}">Return to dashboard</a></button>
     </div>
-    
-    <button><a href="{{ url_for('dashboard', id=id, username=username) }}">Return to dashboard</a></button>
 
 {% endblock %}

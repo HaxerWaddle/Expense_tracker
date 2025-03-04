@@ -4,7 +4,7 @@ from src import app, db, login_manager
 from src.models import USER, EXPENSE
 from src.forms import Register_Form, Login_Form, Add_expense, Edit_expense
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from datetime import datetime
 
 @app.route('/')
 def redirect_from_home():
@@ -66,7 +66,7 @@ def dashboard(id, username):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
-    user_expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.user_id == id)).scalars().all()
+    user_expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.user_id == id).order_by(EXPENSE.id)).scalars().all()
 
     return render_template('dashboard.html', username=username, id=id, expenses=user_expenses)
 
@@ -79,7 +79,7 @@ def add(id, username):
     if form.validate_on_submit():
         expense_name = form.name.data
         expense_description = form.description.data
-        expense_to_add = EXPENSE(name=expense_name, info=expense_description, user_id=id)
+        expense_to_add = EXPENSE(name=expense_name, info=expense_description, user_id=id, time=datetime.now().strftime("%Y-%b-%d  %H:%M%p"))
 
         db.session.add(expense_to_add)
         db.session.commit()
@@ -93,10 +93,10 @@ def edit(id, username, expense_id):
         return redirect(url_for('login'))
 
     form = Edit_expense()
+    expense= db.session.execute(db.select(EXPENSE).where(EXPENSE.id == expense_id)).scalar_one_or_none()
     if form.validate_on_submit():
         new_name = form.name.data
         new_description = form.description.data
-        expense= db.session.execute(db.select(EXPENSE).where(EXPENSE.id == expense_id)).scalar_one_or_none()
 
         if new_name and new_name.strip():
             expense.name = new_name
@@ -106,5 +106,32 @@ def edit(id, username, expense_id):
         
         db.session.commit()
 
-        return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id ,msg="Changes saved")
-    return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id)
+        return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id ,expense=expense, msg="Changes saved")
+    return render_template('edit_expense.html', form=form, id=id, username=username, expense_id=expense_id, expense=expense)
+
+@app.route('/Dashboard/<int:id>/<string:username>/Delete/<int:expense_id>', methods=['GET', 'POST'])
+def delete(id, username, expense_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    expense = db.session.execute(db.select(EXPENSE).where(EXPENSE.id == expense_id)).scalar_one_or_none()
+    try:
+        db.session.delete(expense)
+        db.session.commit()
+    except:
+        db.session.rollback()
+
+    return redirect(url_for('dashboard', id=id, username=username))
+
+
+@app.route('/Dashboard/<int:id>/<string:username>/DELETE_ALL', methods=['GET', 'POST'])
+def DELETE_ALL(id, username):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    
+    expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.id == id)).all()
+    
+    db.session.delete(expenses)
+    db.session.commit()
+
+    return redirect(url_for('dashboard', id=id, username=username))

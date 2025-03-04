@@ -1,13 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <title>Expense Tracker</title>
-    {% block head %}{% endblock %}
-</head>
-<body>
-    {% block body %}{% endblock %}
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+        <script defer src="{{ url_for('static', filename='js/script.js') }}"></script>
+        <title>Expense Tracker</title>
+        {% block head %}{% endblock %}
+    </head>
+    <body>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                // Ensure the same audio instance is used across pages
+                if (!window.audio) {
+                    window.audio = new Audio("{{ url_for('static', filename='audio/lobby.mp3') }}");
+                    window.audio.volume = 0.3;
+                    window.audio.loop = true;
+                }
+        
+                let audio = window.audio;
+                let playButton = document.getElementById("playAudio");
+        
+                // Restore state from localStorage
+                if (localStorage.getItem("audioPlaying") === "true") {
+                    audio.play().catch(() => console.log("Audio blocked!"));
+                    playButton.textContent = "🔊";
+                } else {
+                    playButton.textContent = "🔇";
+                }
+        
+                playButton.addEventListener("click", function () {
+                    if (audio.paused) {
+                        audio.play();
+                        localStorage.setItem("audioPlaying", "true");
+                        playButton.textContent = "🔊";
+                    } else {
+                        audio.pause();
+                        localStorage.setItem("audioPlaying", "false");
+                        playButton.textContent = "🔇";
+                    }
+                });
+        
+                // Save playback position when navigating
+                window.addEventListener("beforeunload", function () {
+                    localStorage.setItem("audioTime", audio.currentTime);
+                });
+        
+                // Resume audio position on new page load
+                let savedTime = localStorage.getItem("audioTime");
+                if (savedTime) {
+                    audio.currentTime = savedTime;
+                }
+            });
+        </script>
+        
+        <button id="playAudio" style="background: none; border: none; font-size: 50px;position: absolute; transform: translate(-740px, -330px)">🔇</button>
+        {% block body %}{% endblock %}
+    </body>
 </html>

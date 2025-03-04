@@ -28,6 +28,7 @@ class EXPENSE(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     info: Mapped[str] = mapped_column(String(100), nullable=False)
+    time: Mapped[str] = mapped_column(String(100), nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey('user_table.id'))
     user: Mapped['USER'] = relationship(back_populates='expenses')
 

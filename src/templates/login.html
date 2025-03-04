@@ -6,7 +6,7 @@
     <div class="login">
         <form class='form' action="/login" method="POST">
             {{ form.csrf_token }}
-            <div class="name">
+            <div class="username">
                 <div>{{ form.name.label }}</div> 
                 <div>{{ form.name(class='user_input')}}</div>
             </div>
@@ -14,15 +14,12 @@
                 <div>{{ form.password.label }} </div>
                 <div>{{ form.password(class='user_input') }}</div>
             </div>
-            <div>{{ form.login(class='button') }}</div>
+            <div>{{ form.login(class='button', id='access') }}</div>
         </form>
         <p>Don't have an account? <a class='link' href="{{ url_for('register') }}">Register</a></p>
         <div>
         {% if error|length > 0 %}
-            <p>{{ error }}</p>
-        {% endif %}
-        {% if msg|length > 0 %}
-            <p>{{ msg }}</p>
+            <p style="color: rgb(255, 67, 67);" id="msg">{{ error }}</p>
         {% endif %}
         </div>
     </div>

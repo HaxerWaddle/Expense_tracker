@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
 {% block head %}{% endblock %}
 
-
 {% block body %}
-    <div>
-        <h1>Welcome {{ username }}</h1>
-        <p>Your recent expenses</p>
+    <div class="dashboard hidden" id="dashboard">
+        <h1>Welcome, {{ username }}</h1>
         {% if expenses|length == 0 %}
         <div>
-            <p>Looks like no expenses were made recently..</p>
+            <p>Looks like no expenses were made yet..</p>
         </div>
+        {% else %}
+            <div class="expense-list hidden">
+                {% for expense in expenses %}
+                    <div class="expense hidden">
+                        <p class="expense_name">{{ expense.name }} </p>
+                        <p class="time">{{ expense.time }}</p>
+                        <p class="desc">{{ expense.info }} </p>
+                        <button class="button"><a href="{{ url_for('edit', id= id, username=username, expense_id=expense.id) }}"> Edit this card</a></button>
+                        <button class="button"><a href="{{ url_for('delete', id=id, username=username, expense_id=expense.id) }}">Delete this card</a></button>
+                    </div>
+                {% endfor %}
+            </div>
         {% endif %}
-        {% for expense in expenses %}
-        <div>
-            <p><span>{{ expense.name }}</span>{{ expense.info }}</p>
-            <button><a href="{{ url_for('edit', id= id, username=username, expense_id=expense.id) }}"> Edit this card</a></button>
-        </div>
-        {% endfor %}
-        <button><a href="{{ url_for('add', id=id, username=username) }}">Add Expense</a></button>
-        
-        <button><a href="{{ url_for('logout') }}">Logout</a></button>
+        <button class="button" id="add"><a href="{{ url_for('add', id=id, username=username) }}">Add Expense</a></button>
+        <button class="button" id="logout"><a href="{{ url_for('logout') }}">Logout</a></button>
     </div>
 {% endblock %}

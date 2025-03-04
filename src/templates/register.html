@@ -6,7 +6,7 @@
     <div class="register">
         <form class="form" method="POST" action="/register">
             {{ form.csrf_token }}
-            <div class="name">
+            <div class="username">
                 <div>{{ form.name.label }}</div>
                 <div>{{ form.name(class='user_input') }}</div>
             </div>
@@ -18,16 +18,16 @@
                 <div>{{ form.confirm.label }}</div>
                 <div>{{ form.confirm(class='user_input') }}</div>
             </div>
-            <div>{{ form.register(class='button') }}</div>
+            <div>{{ form.register(class='button', id='access') }}</div>
         </form>
         <p>Already have an account? <a class='link' href="{{ url_for('login') }}">Login</a></p>
         <div class="error_msg">
             {% if error|length > 0 %}
-                <p>{{ error }}</p>
+                <p style="color: rgb(255, 67, 67);" id="msg">{{ error }}</p>
             {% endif %}
             {% for field, errors in form.errors.items() %}
                 {% for error in errors %}
-                    <p>{{ error }}</p>
+                    <p style="color: rgb(255, 67, 67);" id="msg">{{ error }}</p>
                 {% endfor %}
             {% endfor %}
         </div>
