@@ -128,7 +128,7 @@ h1 {
 
 #logout{
     position: absolute;
-    transform: translate(735px, 0px);
+    transform: translate(48vw, 0vh);
     box-shadow: none;
     font-size: smaller;
 }
@@ -281,7 +281,7 @@ h1 {
 #return {
     position: absolute;
     box-shadow: none;
-    transform: translate(685px, -340px);
+    transform: translate(44.5vw, -48.4vh);
     font-size: smaller;
 }
 
@@ -304,4 +304,12 @@ h1 {
 
 .new_desc .user_input, .name .user_input {
     border-radius: 10px;
+}
+
+#delete_all {
+    position: absolute;
+    transform: translate(47vw, 95vh);
+    font-size: 10px;
+    background-color: rgb(255, 0, 0);
+    box-shadow: none;
 }

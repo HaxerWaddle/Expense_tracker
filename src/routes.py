@@ -129,9 +129,10 @@ def DELETE_ALL(id, username):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     
-    expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.id == id)).all()
-    
-    db.session.delete(expenses)
+    expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.user_id == id)).scalars().all() 
+
+    for expense in expenses:
+        db.session.delete(expense)
     db.session.commit()
 
     return redirect(url_for('dashboard', id=id, username=username))

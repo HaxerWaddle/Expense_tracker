@@ -23,5 +23,6 @@
         {% endif %}
         <button class="button" id="add"><a href="{{ url_for('add', id=id, username=username) }}">Add Expense</a></button>
         <button class="button" id="logout"><a href="{{ url_for('logout') }}">Logout</a></button>
+        <button class="button" id="delete_all"><a href="{{ url_for('DELETE_ALL', id=id, username=username) }}">Delete All!</a></button>
     </div>
 {% endblock %}
