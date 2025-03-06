@@ -313,3 +313,31 @@ h1 {
     background-color: rgb(255, 0, 0);
     box-shadow: none;
 }
+
+.confirm {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    font-size: 100px;
+    width: 100vw;
+    height: 102vh;
+    background-color: black;
+    background-image:
+        linear-gradient(
+          rgba(5, 15, 50, 0.854),
+          rgb(1, 0, 3)
+        ), url('../images/lobby-background.jpg');
+    border-radius: 10px;
+    color: red;
+    box-shadow: 0 0 500px 10px rgba(3, 37, 91, 0.821) inset;
+    transform: translate(0,-2vh);
+    z-index: 2;
+}
+
+#confirm {
+    box-shadow: none;
+    color: red;
+    font-size: xx-large;
+}

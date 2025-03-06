@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template
+from flask import redirect, url_for, render_template, request
 from flask_login import login_required, login_user, logout_user, current_user
 from src import app, db, login_manager
 from src.models import USER, EXPENSE
@@ -67,6 +67,12 @@ def dashboard(id, username):
         return redirect(url_for('login'))
 
     user_expenses = db.session.execute(db.select(EXPENSE).where(EXPENSE.user_id == id).order_by(EXPENSE.id)).scalars().all()
+    status = request.args.get('status', 'Normal')
+    #DELETE STATUS
+    if status == 'Delete_All':
+        return render_template('dashboard.html', username=username, id=id, expenses=user_expenses, confirm='DELETE ALL?')
+    elif status == 'CONFIRM_DELETE_ALL':
+        return redirect(url_for('DELETE_ALL', id=id, username=username))
 
     return render_template('dashboard.html', username=username, id=id, expenses=user_expenses)
 
@@ -134,5 +140,5 @@ def DELETE_ALL(id, username):
     for expense in expenses:
         db.session.delete(expense)
     db.session.commit()
-
+    
     return redirect(url_for('dashboard', id=id, username=username))
