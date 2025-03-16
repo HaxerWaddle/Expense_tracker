@@ -336,7 +336,7 @@ h1 {
     z-index: 2;
 }
 
-#confirm {
+.confirm {
     box-shadow: none;
     color: red;
     font-size: xx-large;
